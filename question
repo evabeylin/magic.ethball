@@ -1,0 +1,38 @@
+pragma solidity ^0.4.25;
+
+// Contract for user asking the magic.ethball a yes/no question 
+
+contract ethballQuestion {
+    
+    string public question;
+    uint public constant COST_PER_QUESTION = 0 ether;
+    address seeker; 
+  
+    constructor () public {
+        seeker = msg.sender;
+   }
+    
+    event newQuestion(string question, string latestQuestion);
+    
+    function getQuestion(string _question){
+        question = _question;
+        require(seeker == msg.sender);
+        newQuestion(question, _question);
+        
+    }
+    
+     // Check the value of ether sent to the contract,
+    // if it is greater than 0 (not free!), refund the excess value back to sender
+
+    modifier checkValue() {
+        uint amountToRefund; msg.value - COST_PER_QUESTION;
+        if (amountToRefund > 0) {
+            if (!msg.sender.send(amountToRefund)) {
+            revert();
+            }
+        }
+        require (amountToRefund >= 0);
+        _;
+    }
+    
+}   
