@@ -4,21 +4,25 @@ pragma solidity ^0.4.25;
 
 contract ethballQuestion {
     
-    string public question;
-    uint public constant COST_PER_QUESTION = 0 ether;
-    address seeker; 
+    string question; // define question variable 
+    uint public constant COST_PER_QUESTION = 0 ether; // define cost of asking question 
+    address seeker; // define address variable
   
-    constructor () public {
+    event newQuestion( // define the event to be emitted and the variable that will change
+        string question
+    );
+    
+    constructor () public { // function to define the seeker by the sender
         seeker = msg.sender;
    }
     
-    event newQuestion(string question, string latestQuestion);
+    function getQuestion(string _question) public { // function to get new question
+        question = _question; // define the question variable
+        newQuestion(_question); // emit event newQuestion
+    }
     
-    function getQuestion(string _question){
-        question = _question;
-        require(seeker == msg.sender);
-        newQuestion(question, _question);
-        
+    function announceQuestion() view public returns (string) {
+        return (question);
     }
     
      // Check the value of ether sent to the contract,
@@ -35,4 +39,4 @@ contract ethballQuestion {
         _;
     }
     
-}   
+}  
